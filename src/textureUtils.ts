@@ -29,13 +29,7 @@ export const drawBumpCanvas = (
     ctx.filter = 'none';
 }
 
-/** テキスト描画用の関数
- * テキスト、フォント、サイズ、テクスチャサイズから
- * テキストエリアの高さ（文字数*フォント別字間）を計算し
- * 文字を縦書きに並べる
- * @param {HTMLInputs} inputs - getHTMLInputs() が返す入力情報
- * @param {AppConfig} CONFIG - コンフィグ
- */
+/** テキスト描画用の関数 */
 export const drawText = (
     ctx: CanvasRenderingContext2D, 
     inputs: Inputs,
@@ -59,7 +53,7 @@ export const drawText = (
     let y = startY + (fontSize / 2);
     ctx.save();
     ctx.fillStyle = 'white';
-    ctx.font = `bold ${fontSize}px ${inputs.fontFamily}`;
+    ctx.font = `${fontSize}px ${inputs.fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     characters.forEach((char) =>{
@@ -121,8 +115,6 @@ export const drawAlbedoCanvas=(
 
 /** テクスチャロード関数
  * 指定したテクスチャを指定した形式でロードし、できなかったらエラーを返す
- * @param {string} path - テクスチャファイルパス
- * @returns {Promise<HTMLImageElement}
  */
 export const loadTexture = (
     path: string,

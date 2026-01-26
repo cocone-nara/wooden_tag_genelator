@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
-//import { CONFIG } from "./constants.ts";
-import type { Inputs } from "./types";
+import { CONFIG } from "./constants.ts";
+import type { Inputs, SubmitStep, OrderPayload } from "./types";
 import { ControlPanel } from "./components/ControlPanel.tsx";
 import { SceneView, type SceneViewHandle } from "./SceneView.tsx";
-import { LoadingModal } from "./components/LoadingModal";
+import { OrderModal } from "./components/OrderModal.tsx";
 import "./App.scss";
 
 //ランダムナンバー生成
@@ -13,7 +13,7 @@ const generateOrderNumber = () => {
     { length: 5 },
     () => chars[Math.floor(Math.random() * chars.length)],
   ).join("");
-  return `WD-${random}`;
+  return `${CONFIG.api.orderPrefix}${random}`;
 };
 
 function App() {
@@ -26,7 +26,11 @@ function App() {
   // パネルの開閉状態を管理
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const sceneViewRef = useRef<SceneViewHandle>(null);
-  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+
+  //送信状態の管理
+  const [submitStep, setSubmitStep] = useState<SubmitStep>('IDLE');
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string>(""); // 受付番号を保持
 
   // 入力遅延
   const [debouncedInputs, setDebouncedInputs] = useState<Inputs>(inputs); // 3D反映用
@@ -43,54 +47,53 @@ function App() {
   };
 
   //制作用データ送信
-  const handleSave = async () => {
-    setLoadingMessage("データを送信しています...");
+  const handleOpenConfirm = () => {
     if (!sceneViewRef.current) return;
-    // 窓口を通じて、SceneViewの中にある takeScreenshot を実行
+  
+    //スクショ撮影
     const dataURL = sceneViewRef.current?.takeScreenshot();
-    if (!dataURL) return;
+    if (!dataURL) {
+      alert("画像の生成に失敗しました");
+      return;
+    }
 
-    //送信データ整理
-    const orderId = generateOrderNumber();
-    const payload = {
+    //受付番号発行
+    const newId = generateOrderNumber();
+
+    setScreenshotUrl(dataURL);
+    setOrderId(newId);
+    setSubmitStep('CONFIRM'); // 確認モーダルを表示
+  }
+
+  const handleFinalSubmit = async () => {
+    if (submitStep === 'SENDING') return; // 連投防止
+    setSubmitStep('SENDING');
+    if (!screenshotUrl) return; // 画像がない場合は中断
+
+    const payload: OrderPayload = {
       orderId: orderId,
       inputs: inputs, // Appが管理している最新の入力値
-      image: dataURL, // 取得した画像
+      image: screenshotUrl, // 取得した画像
       timestamp: new Date().toLocaleString("ja-JP"),
     };
 
     try {
       // GASのURL（ここにコピーしたURLを貼り付け）
-      const GAS_URL = import.meta.env.VITE_GAS_URL;
-      const response = await fetch(GAS_URL, {
+      const response = await fetch(CONFIG.api.gasUrl, {
         method: "POST",
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        setLoadingMessage(null); 
-        alert(
-          `送信成功！\n受付番号: ${orderId}\nスプレッドシートを確認してください。`,
-        );
+        setSubmitStep('SUCCESS'); // 送信成功画面へ
       } else {
         throw new Error("送信に失敗しました");
       }
     } catch (error) {
       console.error("Error:", error);
+      setSubmitStep('ERROR');
       alert("エラーが発生しました。");
-    } finally {
-      setLoadingMessage(null); // 終わったら消す（成功でも失敗でも）
     }
-
-    /* if (dataURL) {
-      // 古い main.js にあったダウンロードロジック
-      const link = document.createElement('a');
-      link.href = dataURL;
-      link.download = `wood_sign_${new Date().getTime()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }*/
   };
 
   return (
@@ -99,12 +102,10 @@ function App() {
         <h1>木札見本ジェネレーター</h1>
       </header>
 
-      {loadingMessage && <LoadingModal message={loadingMessage} />}
-
       <ControlPanel
         inputs={inputs}
         onUpdate={handleUpdate}
-        onSave={handleSave}
+        onSave={handleOpenConfirm}
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
       />
@@ -113,7 +114,7 @@ function App() {
         <SceneView
           ref={sceneViewRef}
           inputs={debouncedInputs}
-          onLoading={(msg) => setLoadingMessage(msg)} />
+        />
         {/* モバイル用ボタンなどは必要に応じて後で追加 */}
         <button
           id="mobile-toggle-btn"
@@ -122,6 +123,17 @@ function App() {
           +
         </button>
       </div>
+
+{submitStep !== 'IDLE' && (
+        <OrderModal 
+          step={submitStep}
+          screenshot={screenshotUrl}
+          orderId={orderId}
+          onConfirm={handleFinalSubmit}
+          onClose={() => setSubmitStep('IDLE')}
+        />
+      )}
+
     </div>
   );
 }

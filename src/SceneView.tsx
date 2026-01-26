@@ -26,12 +26,12 @@ export interface SceneViewHandle {
 
 interface SceneViewProps {
   inputs: Inputs;
-  onLoading: (message: string | null) => void;
 }
 
 export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
   (props, ref) => {
-    const { inputs, onLoading } = props;
+    const { inputs } = props;
+    const [isLoading, setIsLoading] = useState(false); // 内部で管理
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<THREE.Scene | null>(null);
     const planeMaterialRef = useRef<THREE.MeshStandardMaterial | null>(null);
@@ -75,7 +75,7 @@ export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
     useEffect(() => {
       if (!containerRef.current) return;
 
-      onLoading("読み込み中...");
+      setIsLoading(true);
 
       // --- 追加：前回の残骸があれば消す ---
       containerRef.current.innerHTML = "";
@@ -197,7 +197,7 @@ export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
 
       const updateTextures = async () => {
 
-        onLoading("読み込み中...");
+        setIsLoading(true);
 
         // 1. 各キャンバスの「ペン(ctx)」を取得
         const bumpCtx = bumpCanvasRef.current.getContext("2d");
@@ -235,7 +235,7 @@ export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
         if (albedoTextureRef.current)
           albedoTextureRef.current.needsUpdate = true;
 
-        onLoading(null);
+        setIsLoading(false);
       };
 
       // テクスチャ更新 実行
@@ -298,6 +298,17 @@ export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
       },
     }));
 
-    return <div ref={containerRef} style={{ width: "100%", height: "100%" }} />;
+return (
+  <div ref={containerRef} id="x3d-container">
+    {isLoading && (
+      <div className="loading-overlay">
+        <div className="loading-content">
+          <div className="spinner"></div>
+          <p>読み込み中...</p>
+        </div>
+      </div>
+    )}
+  </div>
+);
   },
 );
