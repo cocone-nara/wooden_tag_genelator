@@ -145,7 +145,7 @@ export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
       containerRef.current.appendChild(renderer.domElement);
 
       //カメラ位置
-      camera.position.set(0, 0, 8);
+      camera.position.set(0, 0, 10);
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
 
@@ -299,7 +299,13 @@ export const SceneView = forwardRef<SceneViewHandle, SceneViewProps>(
     }));
 
 return (
-  <div ref={containerRef} id="x3d-container">
+  <div ref={containerRef} id="x3d-container" style={{ 
+      width: '100%', 
+      height: '100%', 
+      display: 'block', 
+      position: 'relative',
+      overflow: 'hidden' 
+    }}>
     {isLoading && (
       <div className="loading-overlay">
         <div className="loading-content">

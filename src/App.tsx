@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { CONFIG } from "./constants.ts";
 import type { Inputs, SubmitStep, OrderPayload } from "./types";
 import { ControlPanel } from "./components/ControlPanel.tsx";
@@ -28,28 +29,18 @@ function App() {
   const sceneViewRef = useRef<SceneViewHandle>(null);
 
   //送信状態の管理
-  const [submitStep, setSubmitStep] = useState<SubmitStep>('IDLE');
+  const [submitStep, setSubmitStep] = useState<SubmitStep>("IDLE");
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string>(""); // 受付番号を保持
 
   // 入力遅延
-  const [debouncedInputs, setDebouncedInputs] = useState<Inputs>(inputs); // 3D反映用
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const handleUpdate = (newInputs: Inputs) => {
-    // 1. まずは入力中の文字を即座に反映（ControlPanel用）
-    setInputs(newInputs);
-    // 2. 既存のタイマーがあればキャンセル
-    if (timerRef.current) clearTimeout(timerRef.current);
-    // 3. 0.5秒後に 3D側のStateだけを更新する
-    timerRef.current = setTimeout(() => {
-      setDebouncedInputs(newInputs);
-    }, 500);
-  };
+  const [debouncedInputs] = useDebounce(inputs, 300); // 3D反映用
+  const handleUpdate = (newInputs: Inputs) => setInputs(newInputs);
 
   //制作用データ送信
   const handleOpenConfirm = () => {
     if (!sceneViewRef.current) return;
-  
+
     //スクショ撮影
     const dataURL = sceneViewRef.current?.takeScreenshot();
     if (!dataURL) {
@@ -62,12 +53,12 @@ function App() {
 
     setScreenshotUrl(dataURL);
     setOrderId(newId);
-    setSubmitStep('CONFIRM'); // 確認モーダルを表示
-  }
+    setSubmitStep("CONFIRM"); // 確認モーダルを表示
+  };
 
   const handleFinalSubmit = async () => {
-    if (submitStep === 'SENDING') return; // 連投防止
-    setSubmitStep('SENDING');
+    if (submitStep === "SENDING") return; // 連投防止
+    setSubmitStep("SENDING");
     if (!screenshotUrl) return; // 画像がない場合は中断
 
     const payload: OrderPayload = {
@@ -85,13 +76,13 @@ function App() {
       });
 
       if (response.ok) {
-        setSubmitStep('SUCCESS'); // 送信成功画面へ
+        setSubmitStep("SUCCESS"); // 送信成功画面へ
       } else {
         throw new Error("送信に失敗しました");
       }
     } catch (error) {
       console.error("Error:", error);
-      setSubmitStep('ERROR');
+      setSubmitStep("ERROR");
       alert("エラーが発生しました。");
     }
   };
@@ -110,11 +101,16 @@ function App() {
         onClose={() => setIsPanelOpen(false)}
       />
 
-      <div id="x3d-container">
-        <SceneView
-          ref={sceneViewRef}
-          inputs={debouncedInputs}
-        />
+      <div
+        id="x3d-container"
+        onClick={() => {
+          // パネルが開いている場合のみ、閉じる
+          if (isPanelOpen) {
+            setIsPanelOpen(false);
+          }
+        }}
+      >
+        <SceneView ref={sceneViewRef} inputs={debouncedInputs} />
         {/* モバイル用ボタンなどは必要に応じて後で追加 */}
         <button
           id="mobile-toggle-btn"
@@ -124,16 +120,15 @@ function App() {
         </button>
       </div>
 
-{submitStep !== 'IDLE' && (
-        <OrderModal 
+      {submitStep !== "IDLE" && (
+        <OrderModal
           step={submitStep}
           screenshot={screenshotUrl}
           orderId={orderId}
           onConfirm={handleFinalSubmit}
-          onClose={() => setSubmitStep('IDLE')}
+          onClose={() => setSubmitStep("IDLE")}
         />
       )}
-
     </div>
   );
 }
