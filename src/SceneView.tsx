@@ -14,7 +14,7 @@ import {
   drawRoughnessCanvas,
   drawAlbedoCanvas,
   loadTexture,
-} from "./textureUtils";
+} from "./utils/textureUtils";
 import { useResizeObserver } from "./hooks/useResizeObserver";
 import { useImperativeHandle, forwardRef } from "react";
 

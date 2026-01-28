@@ -1,6 +1,6 @@
 // textureUtils.ts
-import { CONFIG } from "./constants";
-import type { Inputs } from "./types";
+import { CONFIG } from "../constants";
+import type { Inputs } from "../types";
 
 
 export const drawBumpCanvas = (
