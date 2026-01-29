@@ -22,6 +22,7 @@ export interface SceneViewHandle {
 export const SceneView = forwardRef<SceneViewHandle, {}>(({}, ref) => {
   //状態管理
   const [isLoading, setIsLoading] = useState(false); // 内部で管理
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const planeMaterialRef = useRef<THREE.MeshStandardMaterial | null>(null);
