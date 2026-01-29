@@ -1,30 +1,27 @@
 // src/components/ControlPanel.tsx
-import type { Inputs } from "..//types";
 import { useState } from "react";
 import { CreditModal } from "./CreditModal";
+import { useTagStore } from "../store/useTagStore";
 
 interface Props {
-  inputs: Inputs; // 今の文字
-  onUpdate: (newInputs: Inputs) => void; // 文字が変わった時に呼ぶ関数
   onSave: () => void; //親からの関数
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const ControlPanel = ({
-  inputs,
-  onUpdate,
   onSave,
   isOpen,
   onClose,
 }: Props) => {
-  // 共通の変更ハンドラー：特定のキーだけ書き換えて親に渡す
-  const handleChange = (key: keyof Inputs, value: string | number) => {
-    onUpdate({
-      ...inputs,
-      [key]: value,
-    });
-  };
+
+//storeから状態を呼ぶ
+//const inputs = useTagStore((state)=>state.Inputs);
+const fontSize = useTagStore((state) => state.Inputs.fontSize);
+const fontFamily = useTagStore((state) => state.Inputs.fontFamily);
+const text = useTagStore((state) => state.Inputs.text);
+const frameType = useTagStore((state) => state.Inputs.frameType);
+const updateInputs = useTagStore((state)=> state.updateInputs);
 
   const [isCreditOpen, setIsCreditOpen] = useState(false);
 
@@ -33,8 +30,8 @@ export const ControlPanel = ({
       <div className="control-group">
         <p>表示したい文字を入力してください:</p>
         <textarea
-          value={inputs.text}
-          onChange={(e) => handleChange("text", e.target.value)}
+          value={text}
+          onChange={(e) => updateInputs({text: e.target.value})}
           placeholder="例: 木彫り看板"
         />
       </div>
@@ -42,8 +39,8 @@ export const ControlPanel = ({
       <div className="control-group">
         <p>フォントを選択:</p>
         <select
-          value={inputs.fontFamily}
-          onChange={(e) => handleChange("fontFamily", e.target.value)}
+          value={fontFamily}
+          onChange={(e) => updateInputs({fontFamily: e.target.value})}
         >
           <option value="sans-serif">デフォルト</option>
           <option value="ta-fuga-fude">風雅筆</option>
@@ -57,15 +54,15 @@ export const ControlPanel = ({
       {/* 3. 文字サイズ */}
       <div className="control-group">
         <p>
-          文字サイズ (px): <span>{inputs.fontSize}</span>
+          文字サイズ (px): <span>{fontSize}</span>
         </p>
         <input
           type="range"
           min="50"
           max="150"
           step="10"
-          value={inputs.fontSize}
-          onChange={(e) => handleChange("fontSize", Number(e.target.value))}
+          value={fontSize}
+          onChange={(e) => updateInputs({fontSize: Number(e.target.value)})}
         />
       </div>
 
@@ -76,8 +73,8 @@ export const ControlPanel = ({
           <input
             type="radio"
             name="bg-texture"
-            checked={inputs.frameType === "1"}
-            onChange={() => handleChange("frameType", "1")}
+            checked={frameType === "1"}
+            onChange={() => updateInputs({frameType: "1"})}
           />{" "}
           四角隅
         </label>
@@ -86,8 +83,8 @@ export const ControlPanel = ({
           <input
             type="radio"
             name="bg-texture"
-            checked={inputs.frameType === "2"}
-            onChange={() => handleChange("frameType", "2")}
+            checked={frameType === "2"}
+            onChange={() => updateInputs({frameType: "2"})}
           />{" "}
           角丸
         </label>

@@ -1,6 +1,7 @@
 // src/store/useTagStore.ts
 
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 interface tagState {
   Inputs: {
@@ -13,7 +14,7 @@ interface tagState {
   resetInputs: () => void;
 }
 
-export const useTagStore = create<tagState>((set) => ({
+export const useTagStore = create<tagState>()(subscribeWithSelector((set) => ({
   // 初期状態
   Inputs: {
     fontSize: 120,
@@ -23,10 +24,15 @@ export const useTagStore = create<tagState>((set) => ({
   },
 
   // 更新関数
-  updateInputs: (newInputs) => 
+  updateInputs: (newInputs) =>
     set((state) => ({
-      Inputs: { ...state.Inputs, ...newInputs }
+      Inputs: { ...state.Inputs, ...newInputs },
     })),
 
-  resetInputs: () => set({ /* 初期値 */ }),
+  resetInputs: () =>
+    set({
+      /* 初期値 */
+    }),
+  
 }))
+);

@@ -1,11 +1,31 @@
 // textureUtils.ts
 import { CONFIG } from "../constants";
-import type { Inputs } from "../types";
+import { useTagStore, type tagState } from "../store/useTagStore";
 
+// このファイルtextureUtilsのすべての関数を実行する関数
+export const updateAllCanvases = (
+  contexts: {
+    bump: CanvasRenderingContext2D;
+    roughness: CanvasRenderingContext2D;
+    albedo: CanvasRenderingContext2D;
+  },
+  assets: {
+    wood?: HTMLImageElement;
+    frame?: HTMLImageElement;
+  }
+) => {
+  // ストアから最新の状態を「スナップショット」として取得
+  const inputs = useTagStore.getState().Inputs;
+
+  // 既存の描画ロジックを順次実行
+  drawBumpCanvas(contexts.bump, inputs, assets.frame);
+  drawRoughnessCanvas(contexts.roughness, contexts.bump.canvas);
+  drawAlbedoCanvas(contexts.albedo, contexts.bump.canvas, assets.wood);
+};
 
 export const drawBumpCanvas = (
     ctx: CanvasRenderingContext2D, 
-    inputs: Inputs,
+    inputs: tagState["Inputs"],
     frameImage?: HTMLImageElement,
 ): void => {
     const { width, height } = ctx.canvas;
@@ -32,7 +52,7 @@ export const drawBumpCanvas = (
 /** テキスト描画用の関数 */
 export const drawText = (
     ctx: CanvasRenderingContext2D, 
-    inputs: Inputs,
+    inputs: tagState["Inputs"],
 ): void => {
     const { width, height } = ctx.canvas;
     const characters = inputs.text.split('');
