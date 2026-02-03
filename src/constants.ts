@@ -41,7 +41,7 @@ export const CONFIG: AppConfig = {
         frame_1:'texture/rect_1_2.png',
         frame_2:'texture/rect_2_2.png',
         fallbackColor: '#8B4513',
-        multiplyStrength: 0.8,
+        multiplyStrength: 0.6,
         bumpScale: 1.5,
     },
 

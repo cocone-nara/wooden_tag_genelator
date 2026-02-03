@@ -1,12 +1,14 @@
 // src/hooks/useOrderSubmit.ts
 
 import React, { useState } from "react";
-import type { SubmitStep, OrderPayload, Inputs } from "../types";
+import type { SubmitStep, OrderPayload } from "../types";
 import { CONFIG } from "../constants";
 import { generateOrderNumber } from "../utils/orderUtils";
-import type { SceneViewHandle } from "../SceneView.tsx";
+import type { SceneViewHandle } from "../unused/SceneView_legacy.tsx";
+import { useTagStore } from "../store/useTagStore.ts";
 
-export const useOrderSubmit = (inputs: Inputs) => {
+export const useOrderSubmit = () => {
+
   const [submitStep, setSubmitStep] = useState<SubmitStep>("IDLE");
   const [orderId, setOrderId] = useState("");
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export const useOrderSubmit = (inputs: Inputs) => {
     if (submitStep === "SENDING" || !screenshotUrl) return;
 
     setSubmitStep("SENDING");
+    const inputs = useTagStore.getState().Inputs;
 
     const payload: OrderPayload = {
       orderId,

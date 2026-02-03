@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-interface tagState {
+export interface tagState {
   Inputs: {
     fontSize: number;
     fontFamily: string;
@@ -14,25 +14,25 @@ interface tagState {
   resetInputs: () => void;
 }
 
-export const useTagStore = create<tagState>()(subscribeWithSelector((set) => ({
-  // 初期状態
-  Inputs: {
-    fontSize: 120,
-    fontFamily: "ta-fuga-fude",
-    text: "見本",
-    frameType: "1",
-  },
+export const useTagStore = create<tagState>()(
+  subscribeWithSelector((set) => ({
+    // 初期状態
+    Inputs: {
+      fontSize: 120,
+      fontFamily: "ta-fuga-fude",
+      text: "見本",
+      frameType: "1",
+    },
 
-  // 更新関数
-  updateInputs: (newInputs) =>
-    set((state) => ({
-      Inputs: { ...state.Inputs, ...newInputs },
-    })),
+    // 更新関数
+    updateInputs: (newInputs) =>
+      set((state) => ({
+        Inputs: { ...state.Inputs, ...newInputs },
+      })),
 
-  resetInputs: () =>
-    set({
-      /* 初期値 */
-    }),
-  
-}))
+    resetInputs: () =>
+      set({
+        /* 初期値 */
+      }),
+  })),
 );
