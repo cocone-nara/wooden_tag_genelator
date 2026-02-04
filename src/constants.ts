@@ -1,5 +1,8 @@
 // src/constants.ts
 
+const DEPLOY_ID = "AKfycbzGcXtXD5yuH7maHU9n8myb4TzwJyhhopBtEScmdpH3mWY_K_WBZOU6PKcsb-dAY69WjA";
+
+
 export interface AppConfig {
   readonly canvasSize: number;
   readonly plane: {
@@ -55,9 +58,9 @@ export const CONFIG: AppConfig = {
     },
 
     api:{
-      gasUrl:"https://script.google.com/macros/s/AKfycbzahmju75rRGe1Q2w0Njb2l7LyjWVF4G95zeOTyhGwUn4_ea2QG1z5pWOq6MQiY6Z1d9g/exec",
+      gasUrl:`https://script.google.com/macros/s/${DEPLOY_ID}/exec`,
       orderPrefix:"WD-",
     },
     //文字高さ調整値
     adjustValue: 23,
-} as const;
+} ;

@@ -1,6 +1,6 @@
 import { useTexture } from "@react-three/drei";
 import { useMemo } from "react";
-import { CONFIG } from "./constants";
+import { CONFIG } from "../constants";
 
 export function useTextureAssets() {
   const loadedTextures = useTexture({

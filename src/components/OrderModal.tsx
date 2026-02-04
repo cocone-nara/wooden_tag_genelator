@@ -1,68 +1,127 @@
 // src/components/OrderModal.tsx
-import { type SubmitStep } from '../types';
+import { useTagStore } from "../store/useTagStore";
 
-type Props = {
-  step: SubmitStep;
+const LoadingStep = ({ message }: { message: string }) => (
+  <div className="modal-step">
+    <div className="spinner"></div>
+    <p>{message}</p>
+  </div>
+);
+
+const ConfirmStep = ({
+  screenshot,
+  onCancel,
+  onConfirm,
+}: {
   screenshot: string | null;
-  orderId: string;
+  onCancel: () => void;
   onConfirm: () => void;
-  onClose: () => void;
-};
+}) => (
+  <div className="modal-step">
+    <h2>注文内容の確認</h2>
+    <p>この内容で制作データを送信します。よろしいですか？</p>
+    {screenshot && (
+      <img src={screenshot} alt="Preview" className="modal-preview" />
+    )}
+    <div className="modal-actions">
+      <button className="btn-secondary" onClick={onCancel}>
+        キャンセル
+      </button>
+      <button className="btn-primary" onClick={onConfirm}>
+        送信する
+      </button>
+    </div>
+  </div>
+);
 
-export const OrderModal = ({ step, screenshot, orderId, onConfirm, onClose }: Props) => {
-  if (step === 'IDLE') return null;
+const SuccessStep = ({
+  orderId,
+  screenshot,
+  onReset,
+}: {
+  orderId: string | null;
+  screenshot: string | null;
+  onReset: () => void;
+}) => (
+  <div className="modal-step">
+    <h2 className="success-title">送信完了</h2>
+    <div className="order-number-box">
+      <span className="label">受付番号</span>
+      <span className="number">{orderId}</span>
+    </div>
+    {screenshot && (
+      <div className="download-area">
+        <img
+          src={screenshot}
+          alt="Final Preview"
+          className="modal-preview small"
+        />
+        <a
+          href={screenshot}
+          download={`Order_${orderId|| "kifuda"}.png`}
+          className="btn-download"
+        >
+          画像を保存する
+        </a>
+      </div>
+    )}
+    <button className="btn-primary" onClick={onReset}>
+      閉じる
+    </button>
+  </div>
+);
 
-  // 各ステップのUI定義をまとめる
-  const StepContent = {
-    CONFIRM: (
-      <div className="modal-step">
-        <h2>注文内容の確認</h2>
-        <p>この内容で制作データを送信します。よろしいですか？</p>
-        <p>※画像はイメージです。実際の制作物とは異なります。</p>
-        {screenshot && <img src={screenshot} alt="Preview" className="modal-preview" />}
-        <div className="modal-actions">
-          <button className="btn-secondary" onClick={onClose}>キャンセル</button>
-          <button className="btn-primary" onClick={onConfirm}>送信する</button>
-        </div>
-      </div>
-    ),
-    SENDING: (
-      <div className="modal-step">
-        <div className="spinner"></div>
-        <p>データを送信しています...</p>
-      </div>
-    ),
-    SUCCESS: (
-      <div className="modal-step">
-        <h2 className="success-title">送信完了</h2>
-        <div className="order-number-box">
-          <span className="label">受付番号</span>
-          <span className="number">{orderId}</span>
-        </div>
-        {screenshot && (
-          <div className="download-area">
-            <img src={screenshot} alt="Final Preview" className="modal-preview small" />
-            <a href={screenshot} download={`Order_${orderId}.png`} className="btn-download">画像を保存する</a>
-          </div>
-        )}
-        <button className="btn-primary" onClick={onClose}>閉じる</button>
-      </div>
-    ),
-    ERROR: (
-      <div className="modal-step">
-        <h2>エラーが発生しました</h2>
-        <p>通信環境を確認して、もう一度お試しください。</p>
-        <button className="btn-primary" onClick={onClose}>戻る</button>
-      </div>
-    )
-  };
+const ErrorStep = ({onReset}:{onReset: () => void}) => (
+  <div className="modal-step">
+    <h2>エラーが発生しました</h2>
+    <p>通信環境を確認して、もう一度お試しください。</p>
+    <button className="btn-primary" onClick={onReset}>
+      戻る
+    </button>
+  </div>
+);
+
+export const OrderModal = () => {
+  const step = useTagStore((state) => state.submitStep);
+  const screenshot = useTagStore((state) => state.screenshot.dataUrl);
+  const orderId = useTagStore((state) => state.screenshot.orderId);
+
+  const submitOrder = useTagStore((state) => state.submitOrder);
+  const resetOrder = useTagStore((state) => state.resetOrder);
+
+  if (step === "IDLE") return null;
 
   return (
-    <div className="order-modal-overlay">
-      {/* クリックイベントの伝播を防ぎつつ、現在のステップに応じた内容を表示 */}
+    <div className="order-modal-overlay" onClick={resetOrder}>
       <div className="order-modal-content" onClick={(e) => e.stopPropagation()}>
-        {/* step が IDLE 以外なら、該当する UI を表示。なければ ERROR を出すなどの安全策 */}
-        {StepContent[step as keyof typeof StepContent] || StepContent.ERROR}
+        {(() => {
+          switch (step) {
+            case "PENDING_SCREENSHOT":
+              return <LoadingStep message="プレビュー画像を生成中..." />;
+            case "CONFIRM":
+              return (
+                <ConfirmStep
+                  screenshot={screenshot}
+                  onCancel={resetOrder}
+                  onConfirm={submitOrder}
+                />
+              );
+            case "SENDING":
+              return <LoadingStep message="データを送信しています..." />;
+            case "SUCCESS":
+              return (
+                <SuccessStep
+                  orderId={orderId}
+                  screenshot={screenshot}
+                  onReset={resetOrder}
+                />
+              );
+            case "ERROR":
+              return <ErrorStep onReset={resetOrder} />;
+            default:
+              return null;
+          }
+        })()}
       </div>
     </div>
   );

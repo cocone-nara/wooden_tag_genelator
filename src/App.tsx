@@ -1,23 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ControlPanel } from "./components/ControlPanel.tsx";
-import { SceneView, type SceneViewHandle } from "./SceneView.tsx";
+import { SceneView } from "./features/SceneView.tsx";
 import { OrderModal } from "./components/OrderModal.tsx";
-import { useOrderSubmit } from "./hooks/useOrderSubmit.ts";
+import { useTagStore } from "./store/useTagStore.ts";
 import "./App.scss";
 
 function App() {
-  const {
-    submitStep,
-    screenshotUrl,
-    orderId,
-    prepareOrder,
-    submitOrder,
-    resetOrder,
-  } = useOrderSubmit();
-
   // パネルの開閉状態を管理
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const sceneViewRef = useRef<SceneViewHandle>(null);
+  const submitStep = useTagStore((state) => state.submitStep);
 
   return (
     <div className="app-container">
@@ -26,7 +17,6 @@ function App() {
       </header>
 
       <ControlPanel
-        onSave={() => prepareOrder(sceneViewRef)}
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
       />
@@ -39,9 +29,7 @@ function App() {
           }
         }}
       >
-        <SceneView 
-          ref={sceneViewRef}
-          />
+        <SceneView />
         <button
           id="mobile-toggle-btn"
           onClick={() => setIsPanelOpen(!isPanelOpen)}
@@ -50,15 +38,7 @@ function App() {
         </button>
       </div>
 
-      {submitStep !== "IDLE" && (
-        <OrderModal
-          step={submitStep}
-          screenshot={screenshotUrl}
-          orderId={orderId}
-          onConfirm={submitOrder}
-          onClose={resetOrder}
-        />
-      )}
+      {submitStep !== "IDLE" && <OrderModal />}
     </div>
   );
 }

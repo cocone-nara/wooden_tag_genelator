@@ -1,9 +1,10 @@
 // textureUtils.ts
 import { CONFIG } from "../constants";
-import { useTagStore, type tagState } from "../store/useTagStore";
+import { type tagState } from "../store/useTagStore";
 
 // このファイルtextureUtilsのすべての関数を実行する関数
 export const updateAllCanvases = (
+  inputs: tagState["Inputs"],
   contexts: {
     bump: CanvasRenderingContext2D;
     roughness: CanvasRenderingContext2D;
@@ -14,8 +15,6 @@ export const updateAllCanvases = (
     frame?: HTMLImageElement;
   },
 ) => {
-  // ストアから最新の状態を「スナップショット」として取得
-  const inputs = useTagStore.getState().Inputs;
 
   // 既存の描画ロジックを順次実行
   drawBumpCanvas(contexts.bump, inputs, assets.frame);
