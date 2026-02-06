@@ -1,7 +1,7 @@
 // src/constants.ts
 
-const DEPLOY_ID = "AKfycbzGcXtXD5yuH7maHU9n8myb4TzwJyhhopBtEScmdpH3mWY_K_WBZOU6PKcsb-dAY69WjA";
-
+const DEPLOY_ID =
+  "AKfycbzGcXtXD5yuH7maHU9n8myb4TzwJyhhopBtEScmdpH3mWY_K_WBZOU6PKcsb-dAY69WjA";
 
 export interface AppConfig {
   readonly canvasSize: number;
@@ -13,54 +13,59 @@ export interface AppConfig {
   };
   readonly textures: {
     readonly wood: string;
-    readonly frame_1: string;
-    readonly frame_2: string;
     readonly fallbackColor: string;
     readonly multiplyStrength: number;
     readonly bumpScale: number;
+    readonly frame: { readonly id: string; readonly name: string; readonly path: string }[];
   };
-  readonly api: {//GAS送信用の固定値 送信用URLと受付番号の接頭詞
+  readonly api: {
+    //GAS送信用の固定値 送信用URLと受付番号の接頭詞
     readonly gasUrl: string;
     readonly orderPrefix: string;
   };
-  readonly fontSpacing: Record<string, number>; // キーが文字列、値が数値の辞書
+  readonly fonts: {readonly id: string, readonly name: string, readonly spacing: number}[];
   readonly adjustValue: number;
-  
 }
 
 export const CONFIG: AppConfig = {
-    // canvas用
-    canvasSize: 512,
+  // canvas用
+  canvasSize: 512,
 
-    plane:{
-        planeWidth: 2.5,
-        planeHeight: 6,
-        get aspect() {return  this.planeWidth / this.planeHeight;},
-        get offsetX() {return (1 - this.aspect) / 2;},//中央寄せのための計算
+  plane: {
+    planeWidth: 2.5,
+    planeHeight: 6,
+    get aspect() {
+      return this.planeWidth / this.planeHeight;
     },
+    get offsetX() {
+      return (1 - this.aspect) / 2;
+    }, //中央寄せのための計算
+  },
 
-    textures:{
-        wood: 'texture/wood.png',
-        frame_1:'texture/rect_1_2.png',
-        frame_2:'texture/rect_2_2.png',
-        fallbackColor: '#8B4513',
-        multiplyStrength: 0.6,
-        bumpScale: 1.5,
-    },
+  textures: {
+    wood: "texture/wood.png",
+    fallbackColor: "#8B4513",
+    multiplyStrength: 0.6,
+    bumpScale: 1.5,
+    frame: [
+      { id: "frame_1", name: "四角隅", path: "texture/rect_1_2.png" },
+      { id: "frame_2", name: "角丸", path: "texture/rect_2_2.png" },
+    ],
+  },
 
-    // フォントごとの文字間隔調整値
-    fontSpacing: {
-        'ta-fuga-fude': 0, 
-        'kokuryu': -0.1,
-        'ab-ootori': 0, 
-        'ab-togetsukanteiryu': 0,
-        'ta-engeifude': 0
-    },
+  // フォントごとの設定値
+  fonts: [
+    {id:"ta-fuga-fude", name:"風雅筆", spacing: 0,},
+    {id:"kokuryu", name:"黒龍爽", spacing: -0.1,},
+    {id:"ab-ootori", name:"鳳", spacing: 0},
+    {id:"ab-togetsukanteiryu", name:"渡月勘亭流", spacing: 0,},
+    {id:"ta-engeifude", name:"演芸筆", spacing: 0,},
+  ],
 
-    api:{
-      gasUrl:`https://script.google.com/macros/s/${DEPLOY_ID}/exec`,
-      orderPrefix:"WD-",
-    },
-    //文字高さ調整値
-    adjustValue: 23,
-} ;
+  api: {
+    gasUrl: `https://script.google.com/macros/s/${DEPLOY_ID}/exec`,
+    orderPrefix: "WD-",
+  },
+  //文字高さ調整値
+  adjustValue: 23,
+};

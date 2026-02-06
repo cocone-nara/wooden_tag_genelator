@@ -123,17 +123,6 @@ body {
     width: 100% !important;
     height: 100% !important;
   }
-
-  .loading-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.6); // 背景を暗く
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    color: white;
-  }
 }
 
 #font-size-input,
@@ -299,6 +288,17 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: 5px;
   cursor: pointer;
   font-size: 0.95rem;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6); // 背景を暗く
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1111;
+  color: white;
 }
 
 .loading-content {

@@ -1,11 +1,13 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { CONFIG } from "../constants";
 import { useInitTexture } from "./useInitTexture";
 import { useTextureAssets } from "./useTextureAssets";
 import { useTextureUpdate } from "./useTextureUpdate";
+import { useTagStore } from "../store/useTagStore";
 
 // 3Dモデル
 export const KifudaModel = memo(() => {
+  const setIsModelReady = useTagStore((state) => state.setIsModelReady);
   // ベーステクスチャ定義、ロード
   const assets = useTextureAssets();
   // Canvasを保持（useMemoで一度だけ生成）
@@ -13,6 +15,11 @@ export const KifudaModel = memo(() => {
   // テクスチャ動的更新処理
   const isReady = useTextureUpdate(canvasesCtx, assets, textures);
 
+  useEffect(() => {
+    if (isReady) {
+      setIsModelReady(true);
+    }
+  }, [isReady, setIsModelReady]);
   //ロード完了まで非表示
   if (!isReady) return null;
 

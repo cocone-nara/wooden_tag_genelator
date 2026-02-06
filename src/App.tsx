@@ -9,6 +9,7 @@ function App() {
   // パネルの開閉状態を管理
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const submitStep = useTagStore((state) => state.submitStep);
+  const isModelReady = useTagStore((state) => state.isModelReady);
 
   return (
     <div className="app-container">
@@ -29,6 +30,14 @@ function App() {
           }
         }}
       >
+        {!isModelReady && (
+          <div className="loading-overlay">
+            <div className="loading-content">
+              <div className="spinner"></div>
+              <p>モデルを読み込み中...</p>
+            </div>
+          </div>
+        )}
         <SceneView />
         <button
           id="mobile-toggle-btn"

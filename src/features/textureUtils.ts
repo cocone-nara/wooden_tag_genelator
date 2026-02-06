@@ -12,12 +12,12 @@ export const updateAllCanvases = (
   },
   assets: {
     wood?: HTMLImageElement;
-    frame?: HTMLImageElement;
+    frames?: HTMLImageElement;
   },
 ) => {
 
   // 既存の描画ロジックを順次実行
-  drawBumpCanvas(contexts.bump, inputs, assets.frame);
+  drawBumpCanvas(contexts.bump, inputs, assets.frames);
   drawRoughnessCanvas(contexts.roughness, contexts.bump.canvas);
   drawAlbedoCanvas(contexts.albedo, contexts.bump.canvas, assets.wood);
 };
@@ -47,7 +47,7 @@ export const drawBumpCanvas = (
   ctx.filter = "blur(0.7px)"; // ← ここがC面の幅
   ctx.drawImage(ctx.canvas, 0, 0);
   ctx.filter = "none";
-  
+
   ctx.restore();
 };
 
@@ -60,7 +60,8 @@ export const drawText = (
   const characters = inputs.text.split("");
   const fontSize = inputs.fontSize;
 
-  const spacingRate = CONFIG.fontSpacing[inputs.fontFamily] || 0;
+  const selectedfont = CONFIG.fonts.find(f => f.id === inputs.fontFamily);
+  const spacingRate = selectedfont?.spacing || 0;
   const spacing = spacingRate * fontSize;
 
   const count = characters.length;

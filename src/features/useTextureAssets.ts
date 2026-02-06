@@ -3,19 +3,30 @@ import { useMemo } from "react";
 import { CONFIG } from "../constants";
 
 export function useTextureAssets() {
-  const loadedTextures = useTexture({
-    wood: CONFIG.textures.wood,
-    frame1: CONFIG.textures.frame_1,
-    frame2: CONFIG.textures.frame_2,
-  });
+  const textureMap = useMemo(() => {
+    const frames = Object.fromEntries(
+      CONFIG.textures.frame.map((f) => [f.id, f.path]),
+    );
+    return {
+      wood: CONFIG.textures.wood,
+      ...frames,
+    };
+  }, []);
+
+  const loadedTextures = useTexture(textureMap) as Record<string, any>;
+
   const assets = useMemo(() => {
     Object.values(loadedTextures).forEach((t) => (t.flipY = false));
+
+    const frameImages: Record<string, HTMLImageElement> = {};
+    // CONFIG に基づいて安全にマッピング
+    CONFIG.textures.frame.forEach((f) => {
+        frameImages[f.id] = loadedTextures[f.id].image as HTMLImageElement;
+    });
+
     return {
-      wood: loadedTextures.wood.image as HTMLImageElement,
-      frames: {
-        "1": loadedTextures.frame1.image as HTMLImageElement,
-        "2": loadedTextures.frame2.image as HTMLImageElement,
-      },
+      wood: loadedTextures.wood?.image as HTMLImageElement,
+      frames: frameImages,
     };
   }, [loadedTextures]);
   return assets;

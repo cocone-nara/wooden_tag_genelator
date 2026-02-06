@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { CreditModal } from "./CreditModal";
 import { useTagStore } from "../store/useTagStore";
+import { CONFIG } from "../constants";
 
 interface Props {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
     <div id="control-panel" className={isOpen ? "open" : ""}>
       <fieldset
         disabled={submitStep !== "IDLE"}
-        style={{display: "contents"}}
+        style={{ display: "contents" }}
       >
         <div className="control-group">
           <p>表示したい文字を入力してください:</p>
@@ -42,12 +43,12 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
             value={fontFamily}
             onChange={(e) => updateInputs({ fontFamily: e.target.value })}
           >
-            <option value="sans-serif">デフォルト</option>
-            <option value="ta-fuga-fude">風雅筆</option>
-            <option value="kokuryu">黒龍爽</option>
-            <option value="ab-ootori">鳳</option>
-            <option value="ab-togetsukanteiryu">渡月勘亭流</option>
-            <option value="ta-engeifude">演芸筆</option>
+            {/* CONFIG.fontsにあるフォントをすべて並べる */}
+            {CONFIG.fonts.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -67,25 +68,16 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
 
         <div className="control-group">
           <p>フレームを選択:</p>
-          <label>
-            <input
-              type="radio"
-              name="bg-texture"
-              checked={frameType === "1"}
-              onChange={() => updateInputs({ frameType: "1" })}
-            />{" "}
-            四角隅
-          </label>
-          <br />
-          <label>
-            <input
-              type="radio"
-              name="bg-texture"
-              checked={frameType === "2"}
-              onChange={() => updateInputs({ frameType: "2" })}
-            />{" "}
-            角丸
-          </label>
+          <select
+            value={frameType} // ここが "frame_1" などのIDを保持するようになる
+            onChange={(e) => updateInputs({ frameType: e.target.value })}
+          >
+            {CONFIG.textures.frame.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="control-group">

@@ -25,13 +25,17 @@ export interface tagState {
     orderId: string;
   };
   submitStep: SubmitStep;
+  isModelReady: boolean;
 
   updateInputs: (newInputs: Partial<tagState["Inputs"]>) => void;
   resetInputs: () => void;
+  getSelectedFont: () => void;
+  getSelectedFrame: () => void;
   PrepareOrder: () => void;
   setScreenshotData: (url: string) => void;
   submitOrder: () => void;
   resetOrder: () => void;
+  setIsModelReady: (ready: boolean) => void;
 }
 
 export const useTagStore = create<tagState>()(
@@ -39,9 +43,9 @@ export const useTagStore = create<tagState>()(
     // 初期状態
     Inputs: {
       fontSize: 120,
-      fontFamily: "ta-fuga-fude",
+      fontFamily: CONFIG.fonts[0].id,
       text: "見本",
-      frameType: "1",
+      frameType: CONFIG.textures.frame[0].id,
     },
     screenshot: {
       requestCount: 0,
@@ -49,6 +53,7 @@ export const useTagStore = create<tagState>()(
       orderId: "",
     },
     submitStep: "IDLE",
+    isModelReady: false,
 
     // 更新関数
     updateInputs: (newInputs) =>
@@ -60,6 +65,22 @@ export const useTagStore = create<tagState>()(
       set({
         /* 初期値 */
       }),
+
+    // 💡 現在選択されているフォントの「詳細データ」をまるごと返す
+    getSelectedFont: () => {
+      const currentId = get().Inputs.fontFamily;
+      // 配列からIDで検索
+      return CONFIG.fonts.find((f) => f.id === currentId) || CONFIG.fonts[0];
+    },
+
+    // 💡 現在選択されているフレームの「詳細データ」をまるごと返す
+    getSelectedFrame: () => {
+      const currentId = get().Inputs.frameType;
+      return (
+        CONFIG.textures.frame.find((f) => f.id === currentId) ||
+        CONFIG.textures.frame[0]
+      );
+    },
 
     PrepareOrder: () => {
       set((state) => ({
@@ -115,5 +136,6 @@ export const useTagStore = create<tagState>()(
         submitStep: "IDLE",
         screenshot: { requestCount: 0, dataUrl: null, orderId: "" },
       }),
+    setIsModelReady: ((ready) => set({ isModelReady: ready })),
   })),
 );

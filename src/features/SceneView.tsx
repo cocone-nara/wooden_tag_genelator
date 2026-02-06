@@ -14,7 +14,8 @@ const ScreenshotHandler = () => {
   const submitStep = useTagStore((state) => state.submitStep);
 
   useEffect(() => {
-    if (submitStep !== "PENDING_SCREENSHOT" || request.requestCount === 0) return;
+    if (submitStep !== "PENDING_SCREENSHOT" || request.requestCount === 0)
+      return;
 
     const originalSize = new THREE.Vector2();
     gl.getSize(originalSize);

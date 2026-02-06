@@ -13,7 +13,7 @@ export function useTextureUpdate(
   },
   assets: {
     wood: HTMLImageElement;
-    frames: { "1": HTMLImageElement; "2": HTMLImageElement };
+    frames: Record<string, HTMLImageElement>;
   },
   textures: {
     bump: THREE.CanvasTexture;
@@ -36,7 +36,7 @@ export function useTextureUpdate(
     //Canvas更新
     updateAllCanvases(inputs, canvasesCtx, {
       wood: assets.wood,
-      frame: assets.frames[inputs.frameType as keyof typeof assets.frames],
+      frames: assets.frames[inputs.frameType],
     });
 
     // Three.js 側に更新通知
