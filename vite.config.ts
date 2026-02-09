@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  base: '/wooden_tag_genelator/',
-})
+  plugins: [react(), tailwindcss()],
+  base: "/wooden_tag_genelator/",
+});

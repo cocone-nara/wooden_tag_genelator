@@ -24,11 +24,11 @@ const ConfirmStep = ({
       <img src={screenshot} alt="Preview" className="modal-preview" />
     )}
     <div className="modal-actions">
-      <button className="btn-secondary" onClick={onCancel}>
-        キャンセル
-      </button>
-      <button className="btn-primary" onClick={onConfirm}>
+      <button className="action-button" onClick={onConfirm}>
         送信する
+      </button>
+      <button className="action-button" onClick={onCancel}>
+        キャンセル
       </button>
     </div>
   </div>
@@ -39,7 +39,7 @@ const SuccessStep = ({
   screenshot,
   onReset,
 }: {
-  orderId: string | null;
+  orderId: string;
   screenshot: string | null;
   onReset: () => void;
 }) => (
@@ -59,13 +59,13 @@ const SuccessStep = ({
         <a
           href={screenshot}
           download={`Order_${orderId|| "kifuda"}.png`}
-          className="btn-download"
+          className="action-button"
         >
           画像を保存する
         </a>
       </div>
     )}
-    <button className="btn-primary" onClick={onReset}>
+    <button className="action-button" onClick={onReset}>
       閉じる
     </button>
   </div>
@@ -75,7 +75,7 @@ const ErrorStep = ({onReset}:{onReset: () => void}) => (
   <div className="modal-step">
     <h2>エラーが発生しました</h2>
     <p>通信環境を確認して、もう一度お試しください。</p>
-    <button className="btn-primary" onClick={onReset}>
+    <button className="action-button" onClick={onReset}>
       戻る
     </button>
   </div>

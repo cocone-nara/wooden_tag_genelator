@@ -86,13 +86,13 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
           </button>
         </div>
         <div className="control-group">
-          <button className="action-button secondary" onClick={prepareOrder}>
+          <button className="action-button" onClick={prepareOrder}>
             データ送信
           </button>
         </div>
         {/* クレジットを開くためのボタン（ロゴ画像付き） */}
         <button
-          className="credit-trigger-button"
+          className="action-button"
           onClick={() => setIsCreditOpen(true)}
         >
           {/*<img src="texture/ness_logo.png" alt="Company Logo" />*/}
@@ -100,7 +100,6 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
         </button>
       </fieldset>
 
-      {/* モーダル本体（ここにあっても fixed なので画面全体に広がる） */}
       <CreditModal
         isOpen={isCreditOpen}
         onClose={() => setIsCreditOpen(false)}

@@ -27,6 +27,14 @@ export function useTextureUpdate(
     const state = useTagStore.getState();
     const inputs = state.Inputs;
 
+    // 画像のデコードを待機
+    const imagesToDecode = [assets.wood, ...Object.values(assets.frames)];
+    await Promise.all(
+      imagesToDecode
+        .filter((img) => img instanceof HTMLImageElement)
+        .map((img) => img.decode().catch(() => {})), // すでにデコード済みならすぐ解決される
+    );
+
     // フォントロード
     if (typeof Typekit !== "undefined") {
       await new Promise((resolve) => Typekit.load({ active: resolve }));
