@@ -10,7 +10,7 @@ export const KifudaModel = memo(() => {
   const setIsModelReady = useTagStore((state) => state.setIsModelReady);
   // ベーステクスチャ定義、ロード
   const assets = useTextureAssets();
-  // Canvasを保持（useMemoで一度だけ生成）
+  // Canvasを保持（useMemoで一度だけ生成、不必要になったらdispose）
   const { textures, canvasesCtx } = useInitTexture();
   // テクスチャ動的更新処理
   const isReady = useTextureUpdate(canvasesCtx, assets, textures);

@@ -3,7 +3,7 @@ import { useTagStore } from "../store/useTagStore";
 
 const LoadingStep = ({ message }: { message: string }) => (
   <div className="modal-step">
-    <div className="spinner"></div>
+    <div className="spinner  border-accent border-t-white"></div>
     <p>{message}</p>
   </div>
 );
@@ -23,14 +23,12 @@ const ConfirmStep = ({
     {screenshot && (
       <img src={screenshot} alt="Preview" className="modal-preview" />
     )}
-    <div className="modal-actions">
-      <button className="action-button" onClick={onConfirm}>
+      <button className="action-button max-w-[50%]" onClick={onConfirm}>
         送信する
       </button>
-      <button className="action-button" onClick={onCancel}>
+      <button className="action-button max-w-[50%]" onClick={onCancel}>
         キャンセル
       </button>
-    </div>
   </div>
 );
 
@@ -58,7 +56,7 @@ const SuccessStep = ({
         />
         <a
           href={screenshot}
-          download={`Order_${orderId|| "kifuda"}.png`}
+          download={`Order_${orderId || "kifuda"}.png`}
           className="action-button"
         >
           画像を保存する
@@ -71,7 +69,7 @@ const SuccessStep = ({
   </div>
 );
 
-const ErrorStep = ({onReset}:{onReset: () => void}) => (
+const ErrorStep = ({ onReset }: { onReset: () => void }) => (
   <div className="modal-step">
     <h2>エラーが発生しました</h2>
     <p>通信環境を確認して、もう一度お試しください。</p>
@@ -90,10 +88,14 @@ export const OrderModal = () => {
   const resetOrder = useTagStore((state) => state.resetOrder);
 
   if (step === "IDLE") return null;
+  const isClosable = step !== "SENDING" && step !== "PENDING_SCREENSHOT";
 
   return (
-    <div className="order-modal-overlay" onClick={resetOrder}>
-      <div className="order-modal-content" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={isClosable ? resetOrder : undefined}
+    >
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         {(() => {
           switch (step) {
             case "PENDING_SCREENSHOT":

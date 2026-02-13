@@ -3,7 +3,7 @@ import { ControlPanel } from "./components/ControlPanel.tsx";
 import { SceneView } from "./features/SceneView.tsx";
 import { OrderModal } from "./components/OrderModal.tsx";
 import { useTagStore } from "./store/useTagStore.ts";
-import "./App.scss";
+import "./App.css";
 
 function App() {
   // パネルの開閉状態を管理
@@ -13,8 +13,9 @@ function App() {
 
   return (
     <div className="app-container">
-      <header id="app-header">
-        <h1>木札見本ジェネレーター</h1>
+      <header className="app-header items-baseline-last pb-2">
+        <h1 className="font-extrabold text-xl">木札ジェネレーター</h1>
+        <p className="ml-4 text-xs">presented by ness彫刻工房</p>
       </header>
 
       <ControlPanel
@@ -23,6 +24,7 @@ function App() {
       />
 
       <div
+        className="x3d-container"
         id="x3d-container"
         onClick={() => {
           if (isPanelOpen) {
@@ -31,8 +33,8 @@ function App() {
         }}
       >
         {!isModelReady && (
-          <div className="loading-overlay">
-            <div className="loading-content">
+          <div className="modal-overlay absolute text-white">
+            <div className="flex flex-col items-center gap-4">
               <div className="spinner"></div>
               <p>モデルを読み込み中...</p>
             </div>

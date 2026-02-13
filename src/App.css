@@ -1,0 +1,196 @@
+/* src/App.css*/
+@import "tailwindcss";
+
+@theme {
+  /*固定値*/
+  --spacing-header: 50px;
+  --spacing-panel: 300px;
+
+  /* カラーパレット */
+  --color-accent: #3e5c76;
+  --color-accent-hover: #2c4257;
+  --color-dark: #2b2b2b;
+  --color-panel: #fdfdfd;
+}
+
+/*
+背景部分
+*/
+@layer base {
+  :root {
+    --text-color: #333;
+    --border-color: #ddd;
+  }
+
+  html,
+  body {
+    @apply h-full w-full m-0 p-0 overflow-hidden text-lg;
+    color: var(--text-color);
+    background-color: var(--color-dark);
+  }
+
+  input[type="number"],
+  input[type="text"],
+  textarea,
+  select {
+    @apply w-full p-3 border border-[--border-color] rounded-md bg-[#f9f9f9] text-base transition-all;
+    &:focus {
+      @apply outline-none border-accent bg-white;
+    }
+  }
+
+  input[type="range"] {
+    @apply w-full h-2 bg-gray-300 rounded-lg cursor-pointer my-2.5 appearance-none;
+
+    /* つまみ部分 (Chrome/Safari) */
+    &::-webkit-slider-thumb {
+      @apply h-6 w-6 rounded-full cursor-pointer transition-colors appearance-none;
+      background-color: var(--color-accent);
+      margin-top: -3px; /* トラックの中央に寄せる */
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* つまみ部分 (Firefox) */
+    &::-moz-range-thumb {
+      @apply h-5 w-5 rounded-full cursor-pointer border-none bg-accent;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+@layer components {
+  /* 全体コンテナ */
+  .app-container {
+    @apply flex w-screen relative box-border bg-dark;
+    height: 100dvh;
+    padding-top: var(--spacing-header);
+
+    @apply max-md:flex-col;
+  }
+
+  /* 共通ボタン */
+  .action-button {
+    @apply w-full p-4 bg-accent text-white border-none rounded-md font-bold cursor-pointer transition-all shadow-md;
+    @apply hover:bg-accent-hover active:translate-y-1;
+
+    &.secondary {
+      @apply mt-2.5 bg-gray-500;
+    }
+  }
+
+  /* ヘッダー */
+  .app-header {
+    @apply fixed w-full top-0 left-0 flex items-center text-white z-30 box-border px-5 h-header bg-accent;
+
+    & h2 {
+      @apply m-0 whitespace-nowrap overflow-hidden text-ellipsis;
+      font-size: clamp(1rem, 4vw, 1.4rem);
+    }
+  }
+
+  /* 3Dコンテナ */
+  .x3d-container {
+    @apply flex-1 relative overflow-hidden min-h-0 min-w-0;
+    @apply max-md:w-full max-md:h-screen;
+    background-color: #333;
+
+    & canvas {
+      @apply block w-full! h-full!;
+      /* 動かなかったらwとhに!important */
+    }
+  }
+
+  /* コントロールパネル */
+  .control-panel {
+    @apply w-panel h-full min-w-64 p-6 bg-panel flex overflow-y-auto z-20 flex-col box-border;
+    @apply max-md:fixed max-md:bottom-0 max-md:left-0 max-md:w-full max-md:h-auto max-md:rounded-t-2xl;
+    @apply max-md:translate-y-[110%] max-md:transition-transform max-md:duration-300 max-md:ease-out;
+    &.open {
+      @apply max-md:translate-y-0;
+    }
+  }
+
+  & .control-group {
+    @apply mb-5;
+    & p {
+      @apply m-0 mb-2 font-bold text-[0.9rem] flex justify-between;
+    }
+  }
+}
+
+@layer components {
+  /* モーダル用バオーバーレイ */
+  .modal-overlay {
+    @apply fixed inset-0 flex justify-center items-center z-50 bg-black/80;
+  }
+  .modal-content {
+    @apply bg-panel p-6 rounded-xl max-w-[90%] text-center text-dark;
+    width: 400px;
+  }
+  .modal-step {
+    @apply flex flex-col items-center gap-4;
+  }
+
+  /* 注文番号ボックス */
+  .order-number-box {
+    @apply bg-gray-200 p-3 rounded-md my-4;
+
+    & .number {
+      @apply text-2xl font-bold text-accent;
+    }
+  }
+
+  /* ローディングアニメーション */
+  .spinner {
+    @apply animate-spin rounded-full border-6 border-white/30 border-t-white;
+    @apply block mx-auto;
+    width: 60px;
+    height: 60px;
+  }
+
+}
+
+@layer components {
+  /* スマホ用トグルボタン デスクトップ時は消す */
+  #mobile-toggle-btn {
+    @apply md:hidden md:opacity-0 md:pointer-events-none;
+
+    @apply fixed bottom-5 right-5 w-24 h-24 flex items-center justify-center;
+    @apply bg-accent text-white rounded-full border-none text-[50px] shadow-lg z-10 cursor-pointer;
+
+    &.is-hidden {
+      @apply opacity-0 pointer-events-none;
+    }
+  }
+}
+
+/*----- インプットまわり見た目 -----*/
+/* input[type="number"],
+textarea,
+select {
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.order-modal-content {
+  width: 400px;
+
+  .modal-preview {
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    &.small {
+      width: 150px;
+    }
+  }
+
+  .order-number-box {
+    .label {
+      display: block;
+      font-size: 0.8rem;
+      color: #666;
+    }
+  }
+} */

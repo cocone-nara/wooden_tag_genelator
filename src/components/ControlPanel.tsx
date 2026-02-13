@@ -23,7 +23,7 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
   const [isCreditOpen, setIsCreditOpen] = useState(false);
 
   return (
-    <div id="control-panel" className={isOpen ? "open" : ""}>
+    <div className={`control-panel ${isOpen ? "open" : ""}`}>
       <fieldset
         disabled={submitStep !== "IDLE"}
         style={{ display: "contents" }}
@@ -81,7 +81,7 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
         </div>
 
         <div className="control-group">
-          <button className="action-button" onClick={onClose}>
+          <button className="action-button md:hidden" onClick={onClose}>
             画像更新
           </button>
         </div>

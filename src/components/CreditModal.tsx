@@ -11,16 +11,16 @@ export const CreditModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content flex flex-col gap-4" onClick={(e) => e.stopPropagation()}>
         <img
           src="texture/ness_logo.png"
           alt="Company Logo"
-          className="modal-logo"
+          className="modal-logo max-h-[150px] mx-auto"
         />
         <h2>ness彫刻工房</h2>
         <p>よさこいチームを中心に、木札を制作しています✨️</p>
 
-        <div className="modal-links">
+        <div className="modal-links flex flex-row gap-4">
           <a
             href="https://linktr.ee/ness_engraving"
             target="_blank"

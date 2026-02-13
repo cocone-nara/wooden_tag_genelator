@@ -13,6 +13,7 @@ const ScreenshotHandler = () => {
   const request = useTagStore((state) => state.screenshot);
   const submitStep = useTagStore((state) => state.submitStep);
 
+  //スクリーンショット関数
   useEffect(() => {
     if (submitStep !== "PENDING_SCREENSHOT" || request.requestCount === 0)
       return;
@@ -25,7 +26,7 @@ const ScreenshotHandler = () => {
     gl.setSize(512, 512, false);
     gl.setClearColor(0x000000, 0);
     const tempCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-    tempCamera.position.set(0, 0, 11); // 正面固定位置
+    tempCamera.position.set(0, 0, 10); // 正面固定位置
     tempCamera.lookAt(0, 0, 0);
 
     //撮影

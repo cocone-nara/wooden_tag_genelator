@@ -29,11 +29,11 @@ export interface tagState {
 
   updateInputs: (newInputs: Partial<tagState["Inputs"]>) => void;
   resetInputs: () => void;
-  getSelectedFont: () => void;
-  getSelectedFrame: () => void;
+  getSelectedFont: () => (typeof CONFIG.fonts)[number];
+  getSelectedFrame: () => (typeof CONFIG.textures.frame)[number];
   PrepareOrder: () => void;
   setScreenshotData: (url: string) => void;
-  submitOrder: () => void;
+  submitOrder: () => Promise<void>;
   resetOrder: () => void;
   setIsModelReady: (ready: boolean) => void;
 }
@@ -63,7 +63,12 @@ export const useTagStore = create<tagState>()(
 
     resetInputs: () =>
       set({
-        /* 初期値 */
+        Inputs: {
+          fontSize: 120,
+          fontFamily: CONFIG.fonts[0].id,
+          text: "見本",
+          frameType: CONFIG.textures.frame[0].id,
+        },
       }),
 
     // 💡 現在選択されているフォントの「詳細データ」をまるごと返す
@@ -102,11 +107,17 @@ export const useTagStore = create<tagState>()(
       })),
 
     submitOrder: async () => {
-      const { screenshot, Inputs } = get();
+      const { screenshot, Inputs, getSelectedFont, getSelectedFrame } = get();
       set({ submitStep: "SENDING" });
+      const inputsForSubmit = {
+        fontFamily: getSelectedFont().name,
+        fontSize: Inputs.fontSize,
+        frameType: getSelectedFrame().name,
+        text: Inputs.text,
+      };
       try {
         const payload = {
-          inputs: Inputs,
+          inputs: inputsForSubmit,
           image: screenshot.dataUrl,
         };
         const res = await fetch(CONFIG.api.gasUrl, {
@@ -136,6 +147,6 @@ export const useTagStore = create<tagState>()(
         submitStep: "IDLE",
         screenshot: { requestCount: 0, dataUrl: null, orderId: "" },
       }),
-    setIsModelReady: ((ready) => set({ isModelReady: ready })),
+    setIsModelReady: (ready) => set({ isModelReady: ready }),
   })),
 );
