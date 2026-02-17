@@ -23,7 +23,7 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
   const [isCreditOpen, setIsCreditOpen] = useState(false);
 
   return (
-    <div className={`control-panel ${isOpen ? "open" : ""}`}>
+    <div className={`control-panel  ${isOpen ? "open" : ""}`}>
       <fieldset
         disabled={submitStep !== "IDLE"}
         style={{ display: "contents" }}
@@ -85,19 +85,21 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
             画像更新
           </button>
         </div>
-        <div className="control-group">
-          <button className="action-button" onClick={prepareOrder}>
-            データ送信
-          </button>
+        <div className="flex md:flex-col max-md:flex-row gap-4">
+
+            <button className="action-button" onClick={prepareOrder}>
+              データ送信
+            </button>
+
+            <button
+              className="action-button"
+              onClick={() => setIsCreditOpen(true)}
+            >
+              {/*<img src="texture/ness_logo.png" alt="Company Logo" />*/}
+              <span>連絡先</span>
+            </button>
+
         </div>
-        {/* クレジットを開くためのボタン（ロゴ画像付き） */}
-        <button
-          className="action-button"
-          onClick={() => setIsCreditOpen(true)}
-        >
-          {/*<img src="texture/ness_logo.png" alt="Company Logo" />*/}
-          <span>連絡先</span>
-        </button>
       </fieldset>
 
       <CreditModal

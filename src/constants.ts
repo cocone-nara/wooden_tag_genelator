@@ -1,7 +1,6 @@
 // src/constants.ts
 
-const DEPLOY_ID =
-  "AKfycbzGcXtXD5yuH7maHU9n8myb4TzwJyhhopBtEScmdpH3mWY_K_WBZOU6PKcsb-dAY69WjA";
+const GAS_URL = import.meta.env.VITE_GAS_URL || "";
 
 export interface AppConfig {
   readonly canvasSize: number;
@@ -63,7 +62,7 @@ export const CONFIG: AppConfig = {
   ],
 
   api: {
-    gasUrl: `https://script.google.com/macros/s/${DEPLOY_ID}/exec`,
+    gasUrl: GAS_URL,
     orderPrefix: "WD-",
   },
   //文字高さ調整値

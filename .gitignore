@@ -26,3 +26,5 @@ api
 
 .env
 src/unused
+deploy-gas.mjs
+update-gas-url.mjs

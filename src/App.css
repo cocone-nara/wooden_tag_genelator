@@ -11,6 +11,15 @@
   --color-accent-hover: #2c4257;
   --color-dark: #2b2b2b;
   --color-panel: #fdfdfd;
+
+  /* z-index */
+  --z-canvas: 0;
+  --z-control-panel: 10;
+  --z-header: 20;
+  --z-action-btn: 30;
+  --z-panel-overlay: 40;
+  --z-modal: 50;
+  --z-loading: 100;
 }
 
 /*
@@ -80,11 +89,17 @@
 
   /* ヘッダー */
   .app-header {
-    @apply fixed w-full top-0 left-0 flex items-center text-white z-30 box-border px-5 h-header bg-accent;
+    @apply fixed w-full top-0 left-0 flex items-baseline text-white box-border px-5 h-header bg-accent;
+    z-index: var(--z-header);
 
-    & h2 {
-      @apply m-0 whitespace-nowrap overflow-hidden text-ellipsis;
-      font-size: clamp(1rem, 4vw, 1.4rem);
+    & h1 {
+      @apply m-0 whitespace-nowrap;
+      /* 最小1rem、推奨4.5vw、最大1.5rem の間で自動調整 */
+      font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    }
+
+    & p {
+      @apply ml-auto text-[10px] md:text-xs opacity-80;
     }
   }
 
@@ -92,6 +107,7 @@
   .x3d-container {
     @apply flex-1 relative overflow-hidden min-h-0 min-w-0;
     @apply max-md:w-full max-md:h-screen;
+    z-index: var(--z-canvas);
     background-color: #333;
 
     & canvas {
@@ -102,9 +118,11 @@
 
   /* コントロールパネル */
   .control-panel {
-    @apply w-panel h-full min-w-64 p-6 bg-panel flex overflow-y-auto z-20 flex-col box-border;
+    @apply w-panel h-full min-w-64 p-6 bg-panel flex overflow-y-auto flex-col box-border;
     @apply max-md:fixed max-md:bottom-0 max-md:left-0 max-md:w-full max-md:h-auto max-md:rounded-t-2xl;
+    @apply max-md:h-[90dvh] max-md:max-h-[90dvh];
     @apply max-md:translate-y-[110%] max-md:transition-transform max-md:duration-300 max-md:ease-out;
+    z-index: var(--z-control-panel);
     &.open {
       @apply max-md:translate-y-0;
     }
@@ -121,7 +139,8 @@
 @layer components {
   /* モーダル用バオーバーレイ */
   .modal-overlay {
-    @apply fixed inset-0 flex justify-center items-center z-50 bg-black/80;
+    @apply fixed inset-0 flex justify-center items-center bg-black/80;
+    z-index: var(--z-modal);
   }
   .modal-content {
     @apply bg-panel p-6 rounded-xl max-w-[90%] text-center text-dark;
@@ -147,7 +166,6 @@
     width: 60px;
     height: 60px;
   }
-
 }
 
 @layer components {
@@ -155,8 +173,9 @@
   #mobile-toggle-btn {
     @apply md:hidden md:opacity-0 md:pointer-events-none;
 
-    @apply fixed bottom-5 right-5 w-24 h-24 flex items-center justify-center;
-    @apply bg-accent text-white rounded-full border-none text-[50px] shadow-lg z-10 cursor-pointer;
+    @apply fixed bottom-5 right-5 w-20 h-20 flex items-center justify-center;
+    @apply bg-accent text-white rounded-full border-none text-[50px] shadow-lg cursor-pointer;
+    z-index: var(--z-action-btn);
 
     &.is-hidden {
       @apply opacity-0 pointer-events-none;

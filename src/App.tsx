@@ -14,8 +14,10 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header items-baseline-last pb-2">
-        <h1 className="font-extrabold text-xl">木札ジェネレーター</h1>
-        <p className="ml-4 text-xs">presented by ness彫刻工房</p>
+        <h1 className="font-extrabold text-xl max-md:text-[5vw]">
+          木札ジェネレーター
+        </h1>
+        <p className="ml-auto text-xs max-md:text-[2vw]">presented by ness彫刻工房</p>
       </header>
 
       <ControlPanel
@@ -43,6 +45,7 @@ function App() {
         <SceneView />
         <button
           id="mobile-toggle-btn"
+          className="z-[--z-action-btn]"
           onClick={() => setIsPanelOpen(!isPanelOpen)}
         >
           +
