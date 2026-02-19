@@ -1,6 +1,4 @@
 // src/components/ControlPanel.tsx
-import { useState } from "react";
-import { CreditModal } from "./CreditModal";
 import { useTagStore } from "../store/useTagStore";
 import { CONFIG } from "../constants";
 
@@ -19,8 +17,10 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
   const updateInputs = useTagStore((state) => state.updateInputs);
   const prepareOrder = useTagStore((state) => state.PrepareOrder);
   const submitStep = useTagStore((state) => state.submitStep);
+  const orderId = useTagStore((state) => state.screenshot.orderId);
+  const step = useTagStore((state) => state.submitStep);
 
-  const [isCreditOpen, setIsCreditOpen] = useState(false);
+  const setIsCreditOpen = useTagStore((state) => state.setIsCreditOpen);
 
   return (
     <div className={`control-panel  ${isOpen ? "open" : ""}`}>
@@ -86,26 +86,28 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
           </button>
         </div>
         <div className="flex md:flex-col max-md:flex-row gap-4">
+          <button className="action-button" onClick={prepareOrder}>
+            データ送信
+          </button>
 
-            <button className="action-button" onClick={prepareOrder}>
-              データ送信
-            </button>
+          <button
+            className="action-button"
+            onClick={() => setIsCreditOpen(true)}
+          >
+            {/*<img src="texture/ness_logo.png" alt="Company Logo" />*/}
+            <span>連絡先</span>
+          </button>
+        </div>
 
-            <button
-              className="action-button"
-              onClick={() => setIsCreditOpen(true)}
-            >
-              {/*<img src="texture/ness_logo.png" alt="Company Logo" />*/}
-              <span>連絡先</span>
-            </button>
-
+        <div className="control-group my-4 bg-gray-100 p-3 rounded-lg">
+          <h3>受付番号: </h3>
+          {step === "IDLE" && orderId ? (
+            <h3 className="text-right"><strong>{orderId}</strong></h3>
+          ):(
+            <h3 className="text-right opacity-50">データを送信してください</h3>
+          )}
         </div>
       </fieldset>
-
-      <CreditModal
-        isOpen={isCreditOpen}
-        onClose={() => setIsCreditOpen(false)}
-      />
     </div>
   );
 };

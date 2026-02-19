@@ -13,54 +13,56 @@ export type SubmitStep =
   | "ERROR";
 
 export interface tagState {
+  // 入力情報
   Inputs: {
     fontSize: number;
     fontFamily: string;
     text: string;
     frameType: string;
   };
+  updateInputs: (newInputs: Partial<tagState["Inputs"]>) => void;
+  resetInputs: () => void;
+  getSelectedFont: () => (typeof CONFIG.fonts)[number];
+  getSelectedFrame: () => (typeof CONFIG.textures.frame)[number];
+
+  // データ送信状態
   screenshot: {
     requestCount: number;
     dataUrl: string | null;
     orderId: string;
   };
   submitStep: SubmitStep;
-  isModelReady: boolean;
-
-  updateInputs: (newInputs: Partial<tagState["Inputs"]>) => void;
-  resetInputs: () => void;
-  getSelectedFont: () => (typeof CONFIG.fonts)[number];
-  getSelectedFrame: () => (typeof CONFIG.textures.frame)[number];
   PrepareOrder: () => void;
   setScreenshotData: (url: string) => void;
   submitOrder: () => Promise<void>;
   resetOrder: () => void;
+
+  // フラグ
+  isModelReady: boolean;
   setIsModelReady: (ready: boolean) => void;
+  isUpdating: boolean;
+  setIsUpdating: (ready: boolean) => void;
+
+  // UI表示状態
+  isCreditOpen: boolean;
+  setIsCreditOpen: (ready: boolean) => void;
 }
 
+// Store本体
 export const useTagStore = create<tagState>()(
   subscribeWithSelector((set, get) => ({
-    // 初期状態
+    // ユーザー入力 初期状態
     Inputs: {
       fontSize: 120,
       fontFamily: CONFIG.fonts[0].id,
       text: "見本",
       frameType: CONFIG.textures.frame[0].id,
     },
-    screenshot: {
-      requestCount: 0,
-      dataUrl: null,
-      orderId: "",
-    },
-    submitStep: "IDLE",
-    isModelReady: false,
-
     // 更新関数
     updateInputs: (newInputs) =>
       set((state) => ({
         Inputs: { ...state.Inputs, ...newInputs },
       })),
-
     resetInputs: () =>
       set({
         Inputs: {
@@ -70,15 +72,11 @@ export const useTagStore = create<tagState>()(
           frameType: CONFIG.textures.frame[0].id,
         },
       }),
-
-    // 💡 現在選択されているフォントの「詳細データ」をまるごと返す
     getSelectedFont: () => {
       const currentId = get().Inputs.fontFamily;
       // 配列からIDで検索
       return CONFIG.fonts.find((f) => f.id === currentId) || CONFIG.fonts[0];
     },
-
-    // 💡 現在選択されているフレームの「詳細データ」をまるごと返す
     getSelectedFrame: () => {
       const currentId = get().Inputs.frameType;
       return (
@@ -86,6 +84,14 @@ export const useTagStore = create<tagState>()(
         CONFIG.textures.frame[0]
       );
     },
+
+    //送信部分 初期状態
+    screenshot: {
+      requestCount: 0,
+      dataUrl: null,
+      orderId: "",
+    },
+    submitStep: "IDLE",
 
     PrepareOrder: () => {
       set((state) => ({
@@ -108,7 +114,10 @@ export const useTagStore = create<tagState>()(
 
     submitOrder: async () => {
       const { screenshot, Inputs, getSelectedFont, getSelectedFrame } = get();
-      set({ submitStep: "SENDING" });
+      set((state) => ({
+        submitStep: "SENDING",
+        screenshot: { ...state.screenshot, orderId: "" },
+      }));
       const inputsForSubmit = {
         fontFamily: getSelectedFont().name,
         fontSize: Inputs.fontSize,
@@ -127,7 +136,7 @@ export const useTagStore = create<tagState>()(
         if (!res.ok) throw new Error("Network response was not ok");
 
         const result = await res.json();
-        console.log("GASからの返答:", result);
+        //console.log("GASからの返答:", result);
 
         set((state) => ({
           submitStep: "SUCCESS",
@@ -143,10 +152,23 @@ export const useTagStore = create<tagState>()(
     },
 
     resetOrder: () =>
-      set({
+      set((state) => ({
         submitStep: "IDLE",
-        screenshot: { requestCount: 0, dataUrl: null, orderId: "" },
-      }),
+        screenshot: {
+          ...state.screenshot,
+          requestCount: 0,
+          dataUrl: null,
+        },
+      })),
+
+    // フラグ管理
+    isModelReady: false,
     setIsModelReady: (ready) => set({ isModelReady: ready }),
+    isUpdating: false,
+    setIsUpdating: (ready) => set({ isUpdating: ready }),
+
+    // UI表示状態
+    isCreditOpen: false,
+    setIsCreditOpen: (ready) => set({ isCreditOpen: ready }),
   })),
 );

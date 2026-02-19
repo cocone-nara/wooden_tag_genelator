@@ -15,7 +15,6 @@ export const updateAllCanvases = (
     frames?: HTMLImageElement;
   },
 ) => {
-
   // 既存の描画ロジックを順次実行
   drawBumpCanvas(contexts.bump, inputs, assets.frames);
   drawRoughnessCanvas(contexts.roughness, contexts.bump.canvas);
@@ -60,12 +59,14 @@ export const drawText = (
   const characters = inputs.text.split("");
   const fontSize = inputs.fontSize;
 
-  const selectedfont = CONFIG.fonts.find(f => f.id === inputs.fontFamily);
+  const selectedfont = CONFIG.fonts.find((f) => f.id === inputs.fontFamily);
   const spacingRate = selectedfont?.spacing || 0;
   const spacing = spacingRate * fontSize;
 
   const count = characters.length;
   const totalHeight = count > 0 ? count * fontSize + (count - 1) * spacing : 0;
+  // 中央揃え
+  // xは中央 yは枠に合わせて下に移動
   const centerX = width / 2;
   const startY = height / 2 - totalHeight / 2 + CONFIG.adjustValue;
 
@@ -78,7 +79,7 @@ export const drawText = (
   ctx.textBaseline = "middle";
   characters.forEach((char) => {
     ctx.fillText(char, centerX, y);
-    y += fontSize + spacing;
+    y += fontSize + spacing; //
   });
   ctx.restore();
 };

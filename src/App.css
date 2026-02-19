@@ -152,7 +152,7 @@
 
   /* 注文番号ボックス */
   .order-number-box {
-    @apply bg-gray-200 p-3 rounded-md my-4;
+    @apply bg-gray-200 p-3 rounded-md;
 
     & .number {
       @apply text-2xl font-bold text-accent;

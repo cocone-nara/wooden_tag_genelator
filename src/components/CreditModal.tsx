@@ -1,16 +1,14 @@
 // src/components/CreditModal.tsx
-import React from "react";
+import { useTagStore } from '../store/useTagStore';
 
-type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+export const CreditModal = () => {
+    const isCreditOpen = useTagStore((state) => state.isCreditOpen);
+    const onClose = useTagStore((state) => state.setIsCreditOpen)
 
-export const CreditModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null; // 閉じている時は何も出さない
+  if (!isCreditOpen) return null; // 閉じている時は何も出さない
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={()=>onClose(false)}>
       <div className="modal-content flex flex-col gap-4" onClick={(e) => e.stopPropagation()}>
         <img
           src="texture/ness_logo.png"
@@ -37,7 +35,7 @@ export const CreditModal: React.FC<Props> = ({ isOpen, onClose }) => {
           </a>
         </div>
 
-        <button onClick={onClose} className="action-button">
+        <button onClick={()=>onClose(false)} className="action-button">
           閉じる
         </button>
       </div>

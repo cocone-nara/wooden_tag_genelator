@@ -18,17 +18,17 @@ const ConfirmStep = ({
   onConfirm: () => void;
 }) => (
   <div className="modal-step">
-    <h2>注文内容の確認</h2>
+    <h2　className="font-bold">注文内容の確認</h2>
     <p>この内容で制作データを送信します。よろしいですか？</p>
     {screenshot && (
       <img src={screenshot} alt="Preview" className="modal-preview" />
     )}
-      <button className="action-button max-w-[50%]" onClick={onConfirm}>
-        送信する
-      </button>
-      <button className="action-button max-w-[50%]" onClick={onCancel}>
-        キャンセル
-      </button>
+    <button className="action-button max-w-[50%]" onClick={onConfirm}>
+      送信する
+    </button>
+    <button className="action-button max-w-[50%]" onClick={onCancel}>
+      キャンセル
+    </button>
   </div>
 );
 
@@ -42,28 +42,25 @@ const SuccessStep = ({
   onReset: () => void;
 }) => (
   <div className="modal-step">
-    <h2 className="success-title">送信完了</h2>
+    <h2 className="success-title font-bold">送信完了</h2>
+    <p className="">受付番号をスタッフにお伝え下さい。</p>
     <div className="order-number-box">
-      <span className="label">受付番号</span>
+      <span className="label">受付番号：</span>
       <span className="number">{orderId}</span>
     </div>
     {screenshot && (
-      <div className="download-area">
-        <img
-          src={screenshot}
-          alt="Final Preview"
-          className="modal-preview small"
-        />
+      <>
+        <img src={screenshot} alt="Final Preview" className="w-[90%]" />
         <a
           href={screenshot}
           download={`Order_${orderId || "kifuda"}.png`}
-          className="action-button"
+          className="action-button max-w-[50%]"
         >
-          画像を保存する
+          画像のみ保存
         </a>
-      </div>
+      </>
     )}
-    <button className="action-button" onClick={onReset}>
+    <button className="action-button max-w-[50%]" onClick={onReset}>
       閉じる
     </button>
   </div>

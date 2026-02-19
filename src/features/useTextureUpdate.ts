@@ -22,12 +22,14 @@ export function useTextureUpdate(
   },
 ) {
   const [isReady, setIsReady] = useState(false);
+  const setIsUpdating = useTagStore((state) => state.setIsUpdating);;
 
   const performUpdate = async () => {
     const state = useTagStore.getState();
     const inputs = state.Inputs;
+    setIsUpdating(true);
 
-    // 画像のデコードを待機
+    // 画像のデコード
     const imagesToDecode = [assets.wood, ...Object.values(assets.frames)];
     await Promise.all(
       imagesToDecode
@@ -36,8 +38,13 @@ export function useTextureUpdate(
     );
 
     // フォントロード
+    // 広告ブロッカーで弾かれる場合あり そんなに問題ないはず
     if (typeof Typekit !== "undefined") {
       await new Promise((resolve) => Typekit.load({ active: resolve }));
+      await document.fonts.load(
+        `${inputs.fontSize}px "${inputs.fontFamily}"`,
+        inputs.text,
+      );
       await document.fonts.ready;
     }
 
@@ -51,6 +58,8 @@ export function useTextureUpdate(
     textures.bump.needsUpdate = true;
     textures.roughness.needsUpdate = true;
     textures.albedo.needsUpdate = true;
+
+    setIsUpdating(false);
   };
   const debouncedUpdate = useDebouncedCallback(performUpdate, 300);
 

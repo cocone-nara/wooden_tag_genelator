@@ -53,8 +53,9 @@ export const CONFIG: AppConfig = {
   },
 
   // フォントごとの設定値
+  // spacing フォントサイズに対する割合 -0.1ならフォントサイズ*0.1詰める
   fonts: [
-    {id:"ta-fuga-fude", name:"風雅筆", spacing: 0,},
+    {id:"ta-fuga-fude", name:"風雅筆", spacing: -0.05,},
     {id:"kokuryu", name:"黒龍爽", spacing: -0.1,},
     {id:"ab-ootori", name:"鳳", spacing: 0},
     {id:"ab-togetsukanteiryu", name:"渡月勘亭流", spacing: 0,},
@@ -65,6 +66,6 @@ export const CONFIG: AppConfig = {
     gasUrl: GAS_URL,
     orderPrefix: "WD-",
   },
-  //文字高さ調整値
-  adjustValue: 23,
+  //文字高さ調整値 この値だけ文字が下にさがる
+  adjustValue: 28,
 };
