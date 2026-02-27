@@ -45,13 +45,13 @@ const ScreenshotHandler = () => {
 
 export const SceneView = memo(() => {
   return (
-    <div style={{ width: "100%", height: "100%", background: "#d0d0d0" }}>
+    <div style={{ width: "100%", height: "100%", background: "#faf9f6" }}>
       <Canvas
         flat
         gl={{ preserveDrawingBuffer: true }} // スクショに必要
       >
         <Suspense fallback={null}>
-          <color attach="background" args={["#d0d0d0"]} />
+          <color attach="background" args={["#faf9f6"]} />
           {/* カメラ設定 */}
           <PerspectiveCamera makeDefault position={[0, 0, 11]} fov={45} />
 

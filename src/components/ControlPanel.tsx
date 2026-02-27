@@ -99,7 +99,7 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
           </button>
         </div>
 
-        <div className="control-group my-4 bg-gray-100 p-3 rounded-lg">
+        <div className="control-group my-4 bg-inputbg p-3 rounded-lg">
           <h3>受付番号: </h3>
           {step === "IDLE" && orderId ? (
             <h3 className="text-right"><strong>{orderId}</strong></h3>

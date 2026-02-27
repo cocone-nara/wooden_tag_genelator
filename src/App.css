@@ -6,11 +6,12 @@
   --spacing-header: 50px;
   --spacing-panel: 300px;
 
-  /* カラーパレット */
-  --color-accent: #3e5c76;
-  --color-accent-hover: #2c4257;
+/* 画像のメインカラー：ロゴの濃いブラウン (#43342d) */
+  --color-accent: #43342d;
+  --color-accent-hover: #2d231e;
   --color-dark: #2b2b2b;
-  --color-panel: #fdfdfd;
+  --color-panel: #ece4db;
+  --color-inputbg: #faf9f6;
 
   /* z-index */
   --z-canvas: 0;
@@ -27,8 +28,10 @@
 */
 @layer base {
   :root {
-    --text-color: #333;
-    --border-color: #ddd;
+/* 木札の文字のような深い色 */
+    --text-color: #3a322e;
+    /* 背景色より少し濃い境界線 */
+    --border-color: #d8cfc4;
   }
 
   html,
@@ -42,14 +45,14 @@
   input[type="text"],
   textarea,
   select {
-    @apply w-full p-3 border border-[--border-color] rounded-md bg-[#f9f9f9] text-base transition-all;
+    @apply w-full p-3 border border-[--border-color] rounded-md bg-inputbg text-base transition-all;
     &:focus {
       @apply outline-none border-accent bg-white;
     }
   }
 
   input[type="range"] {
-    @apply w-full h-2 bg-gray-300 rounded-lg cursor-pointer my-2.5 appearance-none;
+    @apply w-full h-2 bg-inputbg rounded-lg cursor-pointer my-2.5 appearance-none;
 
     /* つまみ部分 (Chrome/Safari) */
     &::-webkit-slider-thumb {
@@ -152,7 +155,7 @@
 
   /* 注文番号ボックス */
   .order-number-box {
-    @apply bg-gray-200 p-3 rounded-md;
+    @apply bg-inputbg p-3 rounded-md;
 
     & .number {
       @apply text-2xl font-bold text-accent;
