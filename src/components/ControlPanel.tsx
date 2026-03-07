@@ -81,13 +81,13 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
         </div>
 
         <div className="control-group">
-          <button className="action-button md:hidden" onClick={onClose}>
-            画像更新
+          <button className="action-button md:hidden p-6 mb-6" onClick={onClose}>
+            デザイン変更
           </button>
         </div>
         <div className="flex md:flex-col max-md:flex-row gap-4">
           <button className="action-button" onClick={prepareOrder}>
-            データ送信
+            申し込み
           </button>
 
           <button
@@ -95,16 +95,16 @@ export const ControlPanel = ({ isOpen, onClose }: Props) => {
             onClick={() => setIsCreditOpen(true)}
           >
             {/*<img src="texture/ness_logo.png" alt="Company Logo" />*/}
-            <span>連絡先</span>
+            <span>About Us</span>
           </button>
         </div>
 
         <div className="control-group my-4 bg-inputbg p-3 rounded-lg">
-          <h3>受付番号: </h3>
+          <h3>申込番号: </h3>
           {step === "IDLE" && orderId ? (
             <h3 className="text-right"><strong>{orderId}</strong></h3>
           ):(
-            <h3 className="text-right opacity-50">データを送信してください</h3>
+            <h3 className="text-right opacity-50">申込後に表示されます</h3>
           )}
         </div>
       </fieldset>

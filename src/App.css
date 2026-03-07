@@ -6,7 +6,7 @@
   --spacing-header: 50px;
   --spacing-panel: 300px;
 
-/* 画像のメインカラー：ロゴの濃いブラウン (#43342d) */
+  /* 画像のメインカラー：ロゴの濃いブラウン (#43342d) */
   --color-accent: #43342d;
   --color-accent-hover: #2d231e;
   --color-dark: #2b2b2b;
@@ -28,7 +28,7 @@
 */
 @layer base {
   :root {
-/* 木札の文字のような深い色 */
+    /* 木札の文字のような深い色 */
     --text-color: #3a322e;
     /* 背景色より少し濃い境界線 */
     --border-color: #d8cfc4;
@@ -123,7 +123,7 @@
   .control-panel {
     @apply w-panel h-full min-w-64 p-6 bg-panel flex overflow-y-auto flex-col box-border;
     @apply max-md:fixed max-md:bottom-0 max-md:left-0 max-md:w-full max-md:h-auto max-md:rounded-t-2xl;
-    @apply max-md:h-[90dvh] max-md:max-h-[90dvh];
+    @apply max-md:h-[95dvh] max-md:max-h-[95dvh];
     @apply max-md:translate-y-[110%] max-md:transition-transform max-md:duration-300 max-md:ease-out;
     z-index: var(--z-control-panel);
     &.open {

@@ -18,7 +18,7 @@ export interface AppConfig {
     readonly frame: { readonly id: string; readonly name: string; readonly path: string }[];
   };
   readonly api: {
-    //GAS送信用の固定値 送信用URLと受付番号の接頭詞
+    //GAS送信用の固定値 送信用URLと申込番号の接頭詞
     readonly gasUrl: string;
     readonly orderPrefix: string;
   };
@@ -55,11 +55,12 @@ export const CONFIG: AppConfig = {
   // フォントごとの設定値
   // spacing フォントサイズに対する割合 -0.1ならフォントサイズ*0.1詰める
   fonts: [
-    {id:"ta-fuga-fude", name:"風雅筆", spacing: -0.05,},
     {id:"kokuryu", name:"黒龍爽", spacing: -0.1,},
-    {id:"ab-ootori", name:"鳳", spacing: 0},
-    {id:"ab-togetsukanteiryu", name:"渡月勘亭流", spacing: 0,},
+    {id:"ta-fuga-fude", name:"風雅筆", spacing: -0.05,},
+  //  {id:"ab-ootori", name:"鳳", spacing: 0},
+  //  {id:"ab-togetsukanteiryu", name:"渡月勘亭流", spacing: 0,},
     {id:"ta-engeifude", name:"演芸筆", spacing: 0,},
+    {id:"ab-junglecock-01", name:"ジャングルコック", spacing :0,},
   ],
 
   api: {
